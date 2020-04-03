@@ -10,7 +10,7 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-class BluetoothAdvertisingHelper {
+class BluetoothLeAdvertiseHelperLollipop implements BluetoothLeAdvertiseHelper {
     private class HelperCallback extends AdvertiseCallback {
         /**
          * Callback triggered in response to {@link BluetoothLeAdvertiser#startAdvertising} indicating
@@ -61,15 +61,17 @@ class BluetoothAdvertisingHelper {
 
     private boolean advertising = false;
 
-    BluetoothAdvertisingHelper(BluetoothAdapter bluetoothAdapter) {
+    BluetoothLeAdvertiseHelperLollipop(BluetoothAdapter bluetoothAdapter) {
         this.bluetoothLeAdvertiser = bluetoothAdapter.getBluetoothLeAdvertiser();
     }
 
-    synchronized boolean isAdvertising() {
+    @Override
+    public synchronized boolean isAdvertising() {
         return advertising;
     }
 
-    synchronized void startAdvertising() {
+    @Override
+    public synchronized void startAdvertising() {
         if (advertising) {
             LogHelper.d("Cannot start BLE advertising: Already advertising");
             return;
@@ -81,7 +83,8 @@ class BluetoothAdvertisingHelper {
         advertising = true;
     }
 
-    synchronized void stopAdvertising() {
+    @Override
+    public synchronized void stopAdvertising() {
         if (!advertising) {
             LogHelper.d("Cannot stop BLE advertising: Not currently advertising");
             return;

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-class BluetoothScanHelper {
+class BluetoothLeScanHelperLollipop implements BluetoothLeScanHelper {
     private class HelperCallback extends ScanCallback {
         /**
          * Callback when a BLE advertisement has been found.
@@ -78,15 +78,17 @@ class BluetoothScanHelper {
 
     private boolean scanning = false;
 
-    BluetoothScanHelper(BluetoothAdapter bluetoothAdapter) {
+    BluetoothLeScanHelperLollipop(BluetoothAdapter bluetoothAdapter) {
         this.bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
     }
 
-    synchronized boolean isScanning() {
+    @Override
+    public synchronized boolean isScanning() {
         return scanning;
     }
 
-    synchronized void startScan() {
+    @Override
+    public synchronized void startScan() {
         if (scanning) {
             LogHelper.d("Cannot start BLE scan: Already scanning");
             return;
@@ -99,7 +101,8 @@ class BluetoothScanHelper {
         scanning = true;
     }
 
-    synchronized void stopScan() {
+    @Override
+    public synchronized void stopScan() {
         if (!scanning) {
             LogHelper.d("Cannot stop BLE scan: Not currently scanning");
             return;
