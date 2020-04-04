@@ -9,6 +9,8 @@ import android.os.Build;
 import android.os.IBinder;
 
 public class ForegroundService extends Service {
+    private static boolean running = false;
+
     private BluetoothLeAdvertiseHelper bleAdvertiseHelper;
     private BluetoothLeScanHelper bleScanHelper;
 
@@ -22,6 +24,10 @@ public class ForegroundService extends Service {
 
     @Override
     public void onCreate() {
+        synchronized (ForegroundService.class) {
+            running = true;
+        }
+
         super.onCreate();
 
         startForeground(NotificationHelper.FOREGROUND_NOTIFICATION_ID,
@@ -54,5 +60,37 @@ public class ForegroundService extends Service {
         stopForeground(true);
 
         super.onDestroy();
+
+        synchronized (ForegroundService.class) {
+            running = false;
+        }
+    }
+
+    /**
+     * Starts the service.
+     */
+    static synchronized void startService(Context c) {
+        if (running) {
+            return;
+        }
+
+        c.startService(getServiceIntent(c));
+        running = true;
+    }
+
+    /**
+     * Stops the service.
+     */
+    static synchronized void stopService(Context c) {
+        if (!running) {
+            return;
+        }
+
+        c.stopService(getServiceIntent(c));
+        running = false;
+    }
+
+    private static Intent getServiceIntent(Context c) {
+        return new Intent(c, ForegroundService.class);
     }
 }
