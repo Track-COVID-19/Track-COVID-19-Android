@@ -82,7 +82,12 @@ public class ForegroundService extends Service {
             return;
         }
 
-        c.startService(getServiceIntent(c));
+        Intent intent = getServiceIntent(c);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            c.startForegroundService(intent);
+        } else {
+            c.startService(intent);
+        }
         running = true;
     }
 
