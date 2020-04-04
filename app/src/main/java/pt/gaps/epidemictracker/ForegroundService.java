@@ -51,7 +51,7 @@ public class ForegroundService extends Service {
         }
 
         if (!bluetoothAdapter.isEnabled()) {
-            // TODO: Prompt user to turn on Bluetooth
+            requestEnableBluetooth();
         }
     }
 
@@ -64,6 +64,14 @@ public class ForegroundService extends Service {
         synchronized (ForegroundService.class) {
             running = false;
         }
+    }
+
+    private void requestEnableBluetooth() {
+        // TODO: Show a proper dialog asking the user to enable bluetooth
+
+        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(enableBtIntent);
     }
 
     /**
