@@ -64,8 +64,10 @@ public class ForegroundService extends Service {
             bleScanHelper = new BluetoothLeScanHelperStub();
         }
 
-        if (RequirementsHelper.needsEnablingBluetooth(this)) {
-            requestEnableBluetooth();
+        if (RequirementsHelper.needsEnablingBluetooth(this) ||
+                RequirementsHelper.needsLocationPermission(this) ||
+                RequirementsHelper.needsEnablingLocation(this)) {
+            launchRequirementsRequestActivity();
         }
 
         bleAdvertiseHelper.startAdvertising();
@@ -83,12 +85,10 @@ public class ForegroundService extends Service {
         }
     }
 
-    private void requestEnableBluetooth() {
-        // TODO: Show a proper dialog asking the user to enable bluetooth
-
-        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+    private void launchRequirementsRequestActivity() {
+        Intent intent = new Intent(this, RequestRequirementsActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(enableBtIntent);
+        startActivity(intent);
     }
 
     /**
