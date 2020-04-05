@@ -21,7 +21,9 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".ForegroundService"></service>
+        <service
+            android:name=".ForegroundService"
+            android:foregroundServiceType="connectedDevice|location" />
 
     </application>
 

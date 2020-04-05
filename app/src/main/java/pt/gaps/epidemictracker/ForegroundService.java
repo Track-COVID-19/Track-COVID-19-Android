@@ -32,7 +32,22 @@ public class ForegroundService extends Service {
 
         startForeground(NotificationHelper.FOREGROUND_NOTIFICATION_ID,
                 NotificationHelper.createForegroundNotification(this));
+        startBluetoothLeOperations();
+    }
 
+    @Override
+    public void onDestroy() {
+        stopBluetoothLeOperations();
+        stopForeground(true);
+
+        super.onDestroy();
+
+        synchronized (ForegroundService.class) {
+            running = false;
+        }
+    }
+
+    private void startBluetoothLeOperations() {
         BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter bluetoothAdapter = bluetoothManager != null ? bluetoothManager.getAdapter() : null;
 
@@ -53,16 +68,19 @@ public class ForegroundService extends Service {
         if (!bluetoothAdapter.isEnabled()) {
             requestEnableBluetooth();
         }
+
+        bleAdvertiseHelper.startAdvertising();
+        bleScanHelper.startScan();
     }
 
-    @Override
-    public void onDestroy() {
-        stopForeground(true);
-
-        super.onDestroy();
-
-        synchronized (ForegroundService.class) {
-            running = false;
+    private void stopBluetoothLeOperations() {
+        if (bleAdvertiseHelper != null) {
+            bleAdvertiseHelper.stopAdvertising();
+            bleAdvertiseHelper = null;
+        }
+        if (bleScanHelper != null) {
+            bleScanHelper.stopScan();
+            bleScanHelper = null;
         }
     }
 
