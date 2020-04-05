@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.provider.Settings;
 
 public class RequestRequirementsActivity extends AppCompatActivity {
+    private boolean requesting = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +32,7 @@ public class RequestRequirementsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        requesting = false;
         checkMissingRequirements();
     }
 
@@ -37,12 +40,18 @@ public class RequestRequirementsActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
+        requesting = false;
         checkMissingRequirements();
     }
 
     private void checkMissingRequirements() {
         // TODO: Display a message describing the requirements that are missing before asking for them
 
+        if (requesting) {
+            return;
+        }
+
+        requesting = true;
         if (RequirementsHelper.needsEnablingBluetooth(this)) {
             requestEnableBluetooth();
         } else if (RequirementsHelper.needsLocationPermission(this)) {
@@ -50,6 +59,7 @@ public class RequestRequirementsActivity extends AppCompatActivity {
         } else if (RequirementsHelper.needsEnablingLocation(this)) {
             requestEnableLocation();
         } else {
+            requesting = false;
             finish();
         }
     }
