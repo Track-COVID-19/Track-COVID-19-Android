@@ -75,7 +75,7 @@ class BluetoothLeScanHelperLollipop implements BluetoothLeScanHelper {
 
     private static final int SCAN_MODE = ScanSettings.SCAN_MODE_LOW_POWER;
     private static final int MATCH_MODE = ScanSettings.MATCH_MODE_STICKY;
-    private static final long REPORT_DELAY = 5000;
+    private static final long REPORT_DELAY = 0; // Note: Apparently on some devices using a value other than 0 will produce no results
 
     private final BluetoothLeScanner bluetoothLeScanner;
     private final ScanCallback scanCallback = new HelperCallback();
