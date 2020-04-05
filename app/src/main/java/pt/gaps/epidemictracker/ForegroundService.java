@@ -51,8 +51,7 @@ public class ForegroundService extends Service {
         BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter bluetoothAdapter = bluetoothManager != null ? bluetoothManager.getAdapter() : null;
 
-        if (bluetoothAdapter == null) {
-            // Bluetooth is not supported
+        if (!RequirementsHelper.isBluetoothCapable(this)) {
             stopSelf();
             return;
         }
@@ -65,7 +64,7 @@ public class ForegroundService extends Service {
             bleScanHelper = new BluetoothLeScanHelperStub();
         }
 
-        if (!bluetoothAdapter.isEnabled()) {
+        if (RequirementsHelper.needsEnablingBluetooth(this)) {
             requestEnableBluetooth();
         }
 
