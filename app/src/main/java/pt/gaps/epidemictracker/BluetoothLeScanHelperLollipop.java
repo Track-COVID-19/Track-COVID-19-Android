@@ -66,6 +66,10 @@ class BluetoothLeScanHelperLollipop implements BluetoothLeScanHelper {
                     errorMsg = "Unknown error";
             }
             LogHelper.d(String.format("BLE scan failed with error %d (%s)", errorCode, errorMsg));
+
+            synchronized (BluetoothLeScanHelperLollipop.this) {
+                scanning = false;
+            }
         }
     }
 

@@ -53,6 +53,10 @@ class BluetoothLeAdvertiseHelperLollipop implements BluetoothLeAdvertiseHelper {
                     errorMsg = "Unknown error";
             }
             LogHelper.d(String.format("BLE advertise failed with error %d (%s)", errorCode, errorMsg));
+
+            synchronized (BluetoothLeAdvertiseHelperLollipop.this) {
+                advertising = false;
+            }
         }
     }
 
